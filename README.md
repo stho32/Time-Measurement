@@ -13,4 +13,4 @@ It contains (checked checkboxes means its really in there, otherwise it is a tod
 
 ## Preview / Run 
 
- - Link to the web page: (Time Measurement Toolset)[https://stho32.github.io/Time-Measurement/Source/index.html]
+ - Link to the web page: https://stho32.github.io/Time-Measurement/Source/index.html
