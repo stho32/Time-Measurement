@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Stefans Pomodoro Tracker</title>
+
+  <link href="css/main.css?2" rel="stylesheet">
+</head>
+
+<body>
+  <h1>Pomodoro-Timer</h1>
+  <div class="totalPomodoroCount">
+        You have worked <span data-bind="text:totalPomodorosToday"></span> pomodoros today!
+  </div>
+  <div class="countdown-timer">
+    <div class="countdown-timer-display" data-bind="text: remainingTime">00:00</div>
+    <div class="countdown-timer-buttons">
+      <button class="countdown-timer-button countdown-timer-button-start" type="button" data-bind="click: startClick">Start</button>
+      <button class="countdown-timer-button countdown-timer-button-stop" type="button" data-bind="click: stopClick">Stop</button>
+      <button class="countdown-timer-button countdown-timer-button-reset" type="button" data-bind="click: resetClick">Reset</button>
+      <button class="countdown-timer-button countdown-timer-button-test" type="button" data-bind="click: soundTestClick">Sound-Test</button>
+    </div>
+  </div>
+
+
+
+  <div class="notes">
+    <ul>
+    </ul>
+  </div>
+  <div class="notes-input">
+    <input type="text" data-bind="value: noteText">
+    <input type="button" data-bind="click: writeDownNote" value="Note this!">
+  </div>
+
+  <audio controls id="audiostuff" style="display:none">
+      <source src="sounds/Gong-sound.mp3" type="audio/mpeg">
+      <source src="sounds/Gong-sound.wav" type="audio/wav"> 
+      Your browser does not support the audio element.
+  </audio>
+
+  <script src="vendor/jquery-3.2.1.js"></script>
+  <script src="vendor/knockout-3.4.2.js"></script>
+  <script>
+    var ViewModel = function () {
+      "use strict";
+      var self = {};
+
+      self.startValue = 25*60; // 25*60
+
+      self.remainingSeconds = ko.observable(self.startValue);
+      self.running = ko.observable(false);
+      self.totalPomodorosToday = ko.observable(0);
+      self.noteText = ko.observable("");
+
+      self.remainingTime = ko.computed(function () {
+        var remainingSeconds = parseInt(ko.unwrap(self.remainingSeconds), 10);
+        var minutes = Math.floor(remainingSeconds / 60);
+        var seconds = remainingSeconds % 60;
+
+        var minutesString = minutes.toString();
+        var secondsString = seconds.toString();
+
+        var display = "";
+        if (minutesString.length === 1) display += "0";
+        display += minutesString;
+        display += ":";
+        if (secondsString.length === 1) display += "0";
+        display += secondsString;
+
+        return display;
+      });
+
+      self.timestamp = function() {
+        var time = new Date();
+        return ("0" + time.getHours()).slice(-2) + ":" + 
+               ("0" + time.getMinutes()).slice(-2) + " (" + 
+               self.remainingTime() + "min)";
+      }
+
+      self.alert = function () {
+        self.note("...pomodoro complete!")
+        self.totalPomodorosToday(self.totalPomodorosToday()+1);
+        
+        var audioElement = document.getElementById('audiostuff');
+        audioElement.play();
+      }
+
+      self.soundTestClick = function() {
+        var audioElement = document.getElementById('audiostuff');
+        audioElement.play();
+      }
+
+      self.note = function(noteThis, writeBold) {
+        var $newNote = $("<li></li>").text(self.timestamp() + ": " + noteThis);
+        if (writeBold) {
+          $newNote.css("font-weight", "bold");
+        }
+        else
+        {
+          $newNote.css("font-size", "0.9em");
+          $newNote.css("font-style", "italic");
+        }
+        $(".notes").append($newNote);          
+      }
+
+      self.writeDownNote = function() {
+        if (self.noteText() !== "") {
+          self.note(self.noteText(), true);
+          self.noteText("");
+        }
+      }
+
+      self.runningInterval = function () {
+        if (self.running()) {
+          var remainingSeconds = self.remainingSeconds();
+          if (remainingSeconds > 0) {
+            remainingSeconds -= 1;
+            self.remainingSeconds(remainingSeconds);
+          }
+
+          if (remainingSeconds === 0) {
+            self.stopClick();
+            self.alert();
+          }
+        }
+      }
+
+      self.startClick = function () {
+        if (self.remainingSeconds() > 0) {
+          self.running(true);
+
+          self.note("pomodoro running...");
+        }
+      }
+
+      self.stopClick = function () {
+        if ( self.running() ) {
+          self.note("pomodoro paused.");
+          self.running(false);
+        }
+      }
+
+      self.resetClick = function () {
+        self.note("reset at " + self.remainingTime() + "min");
+        self.running(false);
+        self.remainingSeconds(self.startValue);
+      }
+
+      window.setInterval(self.runningInterval, 1000);
+
+      return self;
+    };
+
+    ko.applyBindings(ViewModel());   
+  </script>
+</body>
+
+</html>

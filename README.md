@@ -1,25 +1,16 @@
-# HTML Project Template
+# Time-Measurement
 
-Use the template using on Mac/Linux:
+This is a little collection of online tools which may help to measure time 
+in different conditions. 
 
-```
-git clone --depth 1 https://github.com/stho32/ProjectTemplate-HTML.git <your-project-dir>
-cd <your-project-dir>
-rm -rf .git/
-git init
-code .
-```
+It contains (checked checkboxes means its really in there, otherwise it is a todo):
 
-You'll get a plain project structure with a basic index.html
-empty files for css and js and a version of jquery and knockout.
-The rest is up to you.
+  - [ ] A pomodoro countdown with the possibility make notes which are logged with a timestamp.
+  - [ ] The same code as the pomodoro is, but using an one hour countdown which I can use for my standard learning unit time which is one hour long. 
+  - [ ] A time log which does not count down at all but gives you the ability to write little log entries. They get a time stamp automatically and a difference in minutes from the previous time log entry. This way you can write a log and then calculate what ever you wish to calculate.
+  - [ ] The same time log but with the ability to set a category on each line. At the end of the log all categories are summarized.
 
-# Detailed requirements
 
-Find the [requirements here](Documentation/requirements.md).
-
-Additional notes I may add [here](Documentation/notes.md).
-
-# Preview / Run 
+## Preview / Run 
 
 *GitHub-Pages-Link may be added here later by me*
