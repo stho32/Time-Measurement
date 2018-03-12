@@ -24,6 +24,9 @@ var ViewModel = function (durationInMinutes) {
         if (secondsString.length === 1) display += "0";
         display += secondsString;
 
+        /* Show remaining time in the pages title */
+        $("head title").text(display);
+
         return display;
     });
 
