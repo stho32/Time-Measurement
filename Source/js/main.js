@@ -9,6 +9,16 @@ var ViewModel = function (durationInMinutes) {
     self.totalPomodorosToday = ko.observable(0);
     self.noteText = ko.observable("");
 
+    self.inputMinutes = ko.observable(60);  // Default to 60 minutes
+
+    self.setDuration = function() {
+        var neueDauer = parseInt(self.inputMinutes(), 10);
+        if (!isNaN(neueDauer) && neueDauer > 0) {
+            self.startValue = neueDauer * 60;
+            self.remainingSeconds(self.startValue);
+        }
+    };
+
     self.remainingTime = ko.computed(function () {
         var remainingSeconds = parseInt(ko.unwrap(self.remainingSeconds), 10);
         var minutes = Math.floor(remainingSeconds / 60);
